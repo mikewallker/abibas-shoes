@@ -10,10 +10,9 @@
 9. membuat routing pada urls.py aplikasi main untuk memetakan fungsi yang telah dibuat pada views.py
 10. deploy ke pws(belum karena webnya bermasalah)
 
-
-
 -Buatlah bagan yang berisi request client ke web aplikasi berbasis Django beserta responnya dan jelaskan pada bagan tersebut kaitan antara urls.py, views.py, models.py, dan berkas html.
 
+![alt text](bagan_tugas2-1.png)
 Jadi saat client memulai request ke web menggunakan url(rute url diatur oleh urls.py dan menampilkan view yang bersesuaian), request tersebut akan diteruskan ke framework Django. Pertama-tama, views.py akan mengambil request tersebut, lalu dia akan menjadi perantara antara model dan template html. Model berisi logika yang mengatur hubungan antara aplikasi dengan database. Data-data tersebut dihubungkan ke template html melalui views. Template html mengatur tampilan antarmuka pengguna. Pada akhirnya, django akan memberi respon berupa web page kepada web (internet) yang akan diteruskan ke client (laptop pengguna).
 
 Model: Menyimpan data dan logika aplikasi.
