@@ -1,6 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
 <h1>Abibas Shoes</h1>
 
 <h5>Name: </h5>
 <p>{{ name }}<p>
 <h5>Class: </h5>
 <p>{{ class }}<p>
+
+<br />
+
+<!-- menambahkan tombol untuk pindah ke halaman form 
+untuk menambahkan objek model--> 
+<a href="{% url 'main:create_product' %}">
+    <button>Add New Product</button>
+</a>
+{% endblock content %}
