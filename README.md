@@ -69,3 +69,53 @@ Kita membutuhkan csrf_token untuk mencegah serangan berbahaya, bisa dibilang csr
 ![alt text](postman-jsonbyid.png)
 -Screenshot akses URL XML by ID menggunakan postman
 ![alt text](postman-xmlbyid.png)
+
+
+**Tugas Individu 4
+
+-Apa perbedaan antara HttpResponseRedirect() dan redirect()?
+HttpResponseRedirect() hanya menerima string URL sebagai parameter, sedangkan redirect() dapat menerima model serta view,
+selain string URL sebagai parameter. Oleh karena itu, redirect() lebih fleksibel dibandingkan HttpResponseRedirect(). redirect() adalah shortcut high-level yang diberikan Django untuk simplifikasi. Sedangkan HttpResponseRedirect() adalah
+objek respons low-level yang mewajibkan kita untuk secara manual memberi string url pada parameter.
+
+-Jelaskan cara kerja penghubungan model Product dengan User!
+Dari segi database, kita menambahkan atribut user untuk setiap objek Product, dengan kata lain kita menghubungkan setiap object Product dengan satu user menggunakan ForeignKey, sehingga setiap objek Product pasti terhubung (memiliki koneksi)
+dengan satu user. Nantinya ketika seorang user mengisi form untuk membuat objek Product baru, atribut user dari objek yang baru dibuat tersebut akan diisi dengan user yang melakukan request.
+
+-Apa perbedaan antara authentication dan authorization, apakah yang dilakukan saat pengguna login? Jelaskan bagaimana Django mengimplementasikan kedua konsep tersebut.
+Authentication adalah proses verifikasi identitas dari pengguna, contohnya ketika kita memasukkan username dan password ketika ingin login, hanya kita sendiri yang tahu apa password dari username tersebut. Sedangkan authorization adalah proses penentuan hak-hak akses dari pengguna tersebut, misalnya seorang admin website berhak untuk mengubah komponen-komponen dari website tersebut, sedangkan pengunjung website biasa hanya bisa melihat tampilan website. Saat pengguna login, proses authentication mem-verifikasi bahwa user tersebut valid sebelum memberikan akses, lalu authorization menentukan apa yang bisa pengguna tersebut lakukan setelah sistem memberikan akses. Pada Django, authentication mencakup kedua hal tersebut sekaligus. Sistem authentication terdiri dari:
+  -Pengguna
+  -Izin: flag biner(ya/tidak) yang menunjukkan apakah pengguna dapat melakukan tugas tertentu.
+  -Grup: Cara untuk menerapkan label dan izin ke lebih dari satu pengguna.
+  -Sistem hashing kata sandi yang dapat dikonfigurasi
+  -Form dan tools views untuk login pengguna, atau membatasi konten
+  -Sistem backend yang pluggable
+
+-Bagaimana Django mengingat pengguna yang telah login? Jelaskan kegunaan lain dari cookies dan apakah semua cookies aman digunakan?
+Django mengingat pengguna yang telah login menggunakan session yang dikelola melalui cookies. Ketika pengguna berhasil login, Django membuat session dan menyimpan informasi session ID di cookies pengguna. Data dari session disimpan di server yang diidentifikasi dengan session ID yang unik. Yang disimpan di cookies pengguna bukanlah seluruh data, melainkan hanya session ID yang merujuk pada data di server. Ketika pengguna melakukan request, cookies yang berisi session ID akan dicocokan dengan yang ada di server untuk memastikan user sudah login. Ketika pengguna logout, session akan dihapus dari server, dan cookies session ID tidak lagi valid.
+
+Selain untuk mengingat pengguna yang telah login, cookies memiliki beberapa kegunaan lain, seperti menyimpan preferensi pengguna, seperti bahasa yang dipilih, mode gelap atau terang, dan pengaturan lainnya. Beberapa situs menggunakan cookies untuk melacak aktivitas pengguna di situs web, seperti halaman yang dikunjungi, item yang dilihat, atau interaksi lainnya. Ini sering digunakan untuk personalisasi dan iklan yang ditargetkan. Dalam aplikasi e-commerce, cookies bisa digunakan untuk menyimpan informasi sementara mengenai item yang dipilih pengguna dalam keranjang belanja. Cookies juga digunakan untuk mengumpulkan data statistik anonim tentang penggunaan situs web, seperti jumlah pengunjung, lama kunjungan, dan halaman yang paling sering dikunjungi.
+
+Tidak semua cookies aman, dan ada beberapa hal yang harus diperhatikan:
+  -Insecure Cookies: Jika cookies tidak diatur dengan benar, mereka bisa menjadi target serangan, seperti session hijacking atau cross-site scripting (XSS). Cookies harus diatur menggunakan Secure (hanya dikirim melalui koneksi HTTPS) dan HttpOnly (tidak dapat diakses melalui JavaScript).
+  -SameSite: Atribut SameSite membantu mencegah cross-site request forgery (CSRF) dengan membatasi bagaimana cookies dikirim dalam permintaan lintas situs.
+  -Penyimpanan Data Sensitif: Cookies sebaiknya tidak digunakan untuk menyimpan informasi sensitif seperti kata sandi atau nomor kartu kredit, karena mereka bisa diakses oleh pihak ketiga jika tidak dienkripsi.
+  -Kadaluarsa Cookies: Pengaturan waktu kadaluarsa yang tidak tepat bisa membuat cookies aktif terlalu lama, memperpanjang risiko serangan jika session pengguna dicuri.
+
+-Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial).
+  • Mengimplementasikan fungsi registrasi, login, dan logout untuk memungkinkan pengguna untuk mengakses aplikasi sebelumnya dengan lancar.
+    - import tools yang diperlukan pada views.py di direktori main
+    - buat fungsi register, login_user, dan logout_user dengan parameter request di views.py dalam direktori main
+    - buat register.html dan login.html di main/templates
+    - tambahkan button logout di main.html
+    - tambahkan path url untuk register, login, dan logout pada urls.py di aplikasi main
+  • Membuat dua akun pengguna dengan masing-masing tiga dummy data menggunakan model yang telah dibuat pada aplikasi sebelumnya untuk setiap akun di lokal.
+  • Menghubungkan model Product dengan User
+    - menambahkan foreign key untuk menguhubungkan satu product dengan satu user pada model Product di models.py
+    - ubah fungsi create_product di views.py di direktori main agar tidak langsung menyimpan data produk ke database, tapi mengasosiasikan terlebih dahulu ke user yang sedang login.
+    - melakukan migrasi model
+  • Menampilkan detail informasi pengguna yang sedang logged in seperti username dan menerapkan cookies seperti last login pada halaman utama aplikasi.
+    - menambahkan fungsionalitas set cookies untuk dapat menampilkan last_login pada fungsi login_user di views.py, lalu informasi cookies tersebut ditambahkan pada context fungsi show_main
+    - menambahkan tampilan last_login pada main.html 
+    - sebagai tambahan, remove cookies last_login pada saat user logout dengan mengubah fungsi logout_user
+
