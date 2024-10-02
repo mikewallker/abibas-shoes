@@ -1,48 +1,31 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>Abibas Shoes</h1>
+{% include 'navbar.html' %}
 
-<h5>Name: </h5>
-<p>{{ name }}<p>
-<h5>Class: </h5>
-<p>{{ class }}<p>
+<div class="container mt-5">
+    <div class="text-center">
+        <!-- Abibas heading -->
+        <h1 class="display-4 text-dark fw-bold">Abibas</h1>
 
-{% if not products %}
-<p>Belum ada data sepatu pada abibas shoes.</p>
-{% else %}
-<table>
-    <tr>
-    <th>Product Name</th>
-    <th>Price</th>
-    <th>Description</th>
-    <th>Type</th>
-    <th>Materials</th>
-    </tr>
+        <!-- Tagline -->
+        <h2 class="display-5 text-primary fw-light">Run Anywhere, Fun Everywhere</h2>
+        <p class="lead text-muted">The best place to find high-quality shoes at great prices!</p>
+    </div>
 
-    {% comment %} Berikut cara memperlihatkan data mood di bawah baris ini
-    {% endcomment %} 
-    {% for product in products %}
-    <tr>
-    <td>{{product.name}}</td>
-    <td>{{product.price}}</td>
-    <td>{{product.description}}</td>
-    <td>{{product.type}}</td>
-    <td>{{product.materials}}</td>
-    </tr>
-    {% endfor %}
-</table>
-{% endif %}
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-6">
+            <div class="card bg-light border-primary shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title text-primary">User Information</h5>
+                    <p class="card-text">
+                        <strong>Name:</strong> {{ name }}<br>
+                        <strong>Class:</strong> {{ class }}<br>
+                        <strong>Last Login:</strong> {{ last_login }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-<br />
-
-<!-- menambahkan tombol untuk pindah ke halaman form 
-untuk menambahkan objek model--> 
-<a href="{% url 'main:create_product' %}">
-    <button>Add New Product</button>
-</a>
-
-<a href="{% url 'main:logout' %}">
-    <button>Logout</button>
-</a>
-<h5>Sesi terakhir login: {{ last_login }}</h5>
 {% endblock content %}
