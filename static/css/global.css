@@ -42,17 +42,14 @@ body {
 }
 
 .mb-3 {
-    display: flex; /* Use flexbox for alignment */
-    align-items: center; /* Center vertically */
     margin-bottom: 1rem; /* Space between input groups */
 }
 
 .form-label {
-    margin-right: 10px; /* Space between label and input */
+    margin-bottom: 5px; /* Space below label */
     font-weight: 700; /* Bold label */
 }
 
 .form-control {
     max-width: 400px; /* Adjust width as necessary */
-    flex-grow: 1; /* Allow input to take remaining space */
 }

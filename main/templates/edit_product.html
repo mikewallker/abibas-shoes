@@ -7,17 +7,33 @@
 
 {% block content %}
 {% include 'navbar.html' %}
+
 <div class="container mt-5">
     <h1 class="text-center">Edit Product</h1>
 
     <form method="POST" class="mt-4">
         {% csrf_token %}
         <div class="mb-3">
-            {{ form.as_p }} <!-- Using as_p for better styling -->
+            {% for field in form %}
+                <div class="mb-3">
+                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                    <input type="{{ field.field.widget.type }}" name="{{ field.name }}" id="{{ field.id_for_label }}" 
+                           class="form-control" value="{{ field.value|default:'' }}" 
+                           {% if field.is_required %} required {% endif %}>
+                    {% if field.errors %}
+                        <div class="text-danger">
+                            {% for error in field.errors %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
         </div>
         <div class="d-flex justify-content-center">
-            <input type="submit" class="btn btn-warning" value="Edit Product" />
+            <input class="btn btn-warning" type="submit" value="Edit Product" />
         </div>
     </form>
 </div>
+
 {% endblock %}

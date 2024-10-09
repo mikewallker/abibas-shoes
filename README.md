@@ -226,7 +226,36 @@ Grid Layout adalah model layout dua dimensi yang memungkinkan pengaturan elemen 
   ◦  Buatlah navigation bar (navbar) untuk fitur-fitur pada aplikasi yang responsive terhadap perbedaan ukuran device, khususnya mobile dan desktop.
     -membuat file navbar.html untuk menampilkan fitur-fitur yang ada seperti Home, Products, dan Logout. Lalu membuat navbar tersebut responsif dengan mengisi setiap href dengan url yang bersesuaian.
 
+**Tugas Individu 6
+◦ Jelaskan manfaat dari penggunaan JavaScript dalam pengembangan aplikasi web!
+  - Dengan JavaScript, kita bisa membuat web kita lebih interaktif dan responsif, serta lebih cepat. JavaScript memungkinkan pengembang untuk menambahkan interaksi dinamis ke situs web, seperti form validation, menu dropdown, slider gambar, dan popup modal. JavaScript adalah bahasa pemrograman yang dijalankan langsung di browser pengguna (client-side). Ini mengurangi beban pada server karena sebagian proses dapat diproses langsung oleh browser, sehingga meningkatkan performa dan efisiensi. Terlebih, mendukung operasi asinkron dengan AJAX.
+◦ Jelaskan fungsi dari penggunaan await ketika kita menggunakan fetch()! Apa yang akan terjadi jika kita tidak menggunakan await?
+  - Fungsi await digunakan untuk menunggu hasil dari fungsi async. Jika tidak menggunakan await, kode selanjutnya akan dieksekusi sebelum Promise fetch() terselesaikan, ini akan menimbulkan error. Ketika kita tidak menggunakan await atau .then(), kita mungkin juga mengalami kesulitan menangani kesalahan. Jika terjadi error dalam operasi fetch(), kita tidak dapat menangkapnya secara langsung tanpa mekanisme .catch() atau blok try...catch.
+◦ Mengapa kita perlu menggunakan decorator csrf_exempt pada view yang akan digunakan untuk AJAX POST?
+  - Decorator csrf_exempt membuat Django tidak perlu mengecek keberadaan csrf_token pada POST request yang dikirimkan ke fungsi ini
+◦ Pada tutorial PBP minggu ini, pembersihan data input pengguna dilakukan di belakang (backend) juga. Mengapa hal tersebut tidak dilakukan di frontend saja?
+  - Data yang datang dari frontend tidak dapat dipercaya sepenuhnya. Meskipun kita telah melakukan pembersihan atau validasi di frontend (menggunakan JavaScript), pengguna bisa saja memanipulasi data tersebut sebelum dikirim ke server.
+◦ Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial)!
+  ◦ AJAX GET
+    ◦ Ubahlah kode cards data item agar dapat mendukung AJAX GET.
+      - mengganti implementasi sebelumnya pada products.html dengan elemen tag div yang berisi id bernama product_cards yang nantinya akan menampilkan kumpulan card yang diimplementasikan dengan script yang berisi fungsi refreshProducts dan getProducts yang menggunakan fetch() API ke data JSON secara asinkronus
+    ◦ Lakukan pengambilan data mood menggunakan AJAX GET. Pastikan bahwa data yang diambil hanyalah data milik pengguna yang logged-in.
+      - diimplementasikan dengan fungsi getProducts di dalam tag script pada products.html
+  ◦ AJAX POST
+    ◦ Buatlah sebuah tombol yang membuka sebuah modal dengan form untuk menambahkan product. (Modal di-trigger dengan menekan suatu tombol pada halaman utama. Saat penambahan mood berhasil, modal harus ditutup dan input form harus dibersihkan dari data yang sudah dimasukkan ke dalam form sebelumnya. Jika penambahan gagal, tampilkan pesan error.)
+      - menambahkan button yang dihubungkan dengan div modal di products.html. Pada button save, tambahkan fungsionalitas menutup modal.
 
+    ◦ Buatlah fungsi view baru untuk menambahkan item baru ke dalam basis data.
+      - menambahkan fungsi add_product_ajax(request)
+
+    ◦ Buatlah path /create-ajax/ yang mengarah ke fungsi view yang baru kamu buat.
+      - di urls.py pada urlpatterns, tambahkan path create-ajax yang mengarah ke add_product_ajax 
+
+    ◦ Hubungkan form yang telah kamu buat di dalam modal kamu ke path /create-ajax/.
+      - pada products.html di dalam tag script, tambahkan fungsi addProduct() yang akan melakukan fetch dengan parameter url dari fungsi add_product_ajax dan menggunakan method POST
+
+    ◦ Lakukan refresh pada halaman utama secara asinkronus untuk menampilkan daftar item terbaru tanpa reload halaman utama secara keseluruhan.
+      - diimplementasikan dengan fungsi refreshProducts di dalam tag script pada products.html
 
 
 

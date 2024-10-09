@@ -12,20 +12,142 @@
     <div class="d-flex justify-content-between align-items-center">
         <h1 class="text-center">Products</h1>
         <a href="{% url 'main:create_product' %}" class="btn btn-primary">Add Product</a>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            Add New Product by AJAX
+        </button>
     </div>
 
-    {% if not products %}
-        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 24rem;">
-            <img src="{% static 'image/sedih-banget.png' %}" alt="No products" class="mb-4" style="width: 8rem; height: 8rem;">
-            <p class="text-muted">No products available in your store.</p>
+    <div id="product_cards"></div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header border-bottom-0">
+                    <h5 class="modal-title" id="exampleModalLabel">Add New Product</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="productForm">
+                        <div class="mb-4">
+                            <label for="name" class="form-label">Name</label>
+                            <input type="text" id="name" name="name" class="form-control" placeholder="Enter the product name" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="price" class="form-label">Price</label>
+                            <input type="number" id="price" name="price" class="form-control" placeholder="Enter the price" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea id="description" name="description" rows="3" class="form-control" placeholder="Enter the product description" required></textarea>
+                        </div>
+                        <div class="mb-4">
+                            <label for="type" class="form-label">Type</label>
+                            <input type="text" id="type" name="type" class="form-control" placeholder="Enter the shoes type" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="materials" class="form-label">Materials</label>
+                            <input id="materials" name="materials" class="form-control" placeholder="Enter the shoes materials" required>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer border-top-0">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" id="submitProduct" form="productForm" class="btn btn-primary">Save</button>
+                </div>
+            </div>
         </div>
-    {% else %}
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4">
-            {% for product in products %}
-                {% include 'card_product.html' with product=product %}
-            {% endfor %}
-        </div>
-    {% endif %}
+    </div>
+
+
+
 </div>
 
+<script>
+
+    function addProduct() {
+        fetch("{% url 'main:add_product_ajax' %}", {
+        method: "POST",
+        body: new FormData(document.querySelector('#productForm')),
+        })
+        .then(response => refreshProducts())
+        
+        document.getElementById("productForm").reset(); 
+        //document.querySelector("[data-modal-toggle='crudModal']").click();
+        const modal = bootstrap.Modal.getInstance(document.getElementById('exampleModal'));
+        modal.toggle();
+
+        modal.dispose(); 
+        const backdrop = document.querySelector('.modal-backdrop');
+        if (backdrop) {
+            backdrop.remove();
+            document.body.classList.remove('modal-open');  // Remove the body class to restore focus
+        }
+        return false;
+    }
+
+    async function getProducts(){
+        return fetch("{% url 'main:show_json' %}").then((res) => res.json())
+    }
+
+    async function refreshProducts() {
+        document.getElementById("product_cards").innerHTML = "";
+        document.getElementById("product_cards").className = "";
+        const products = await getProducts();
+        let htmlString = "";
+        let classNameString = "";
+
+        if (products.length === 0) {
+            classNameString = "flex flex-col items-center justify-center min-h-[24rem] p-6";
+            htmlString = `
+                <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 24rem;">
+                    <img src="{% static 'image/sedih-banget.png' %}" alt="No products" class="mb-4" style="width: 8rem; height: 8rem;">
+                    <p class="text-muted">No products available in your store.</p>
+                </div>
+            `;
+        }
+        else {
+            classNameString = "row row-cols-1 row-cols-sm-2 row-cols-lg-3 g-4"
+            products.forEach((item) => {
+                htmlString += `
+                <div class="col-8 col-lg-4 col-xl-3">
+
+                    <div class="card border-8">
+
+                        <div class="card-body text-center py-4">
+
+                        <h4 class="card-title">${item.fields.name}</h4>
+
+                        <p class="lead card-subtitle">${item.fields.type}</p>
+
+                        <p class="lead card-subtitle">${item.fields.materials}</p>
+
+                        <p class="display-5 my-4 text-primary fw-bold">Rp${item.fields.price}K</p>
+
+                        <p class="card-text mx-5 text-muted d-none d-lg-block">${item.fields.description}</p>
+                        
+                        
+
+                        <a href="/edit-product/${item.pk}" class="btn btn-outline-primary btn-lg mt-3">Edit</a>
+
+                        <a href="/delete/${item.pk}" class="btn btn-outline-primary btn-lg mt-3">Delete</a>
+
+                        </div>
+
+                    </div>
+
+                </div>
+                `;
+            });
+        }
+        document.getElementById("product_cards").className = classNameString;
+        document.getElementById("product_cards").innerHTML = htmlString;
+    }
+refreshProducts();
+
+document.getElementById("productForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+    addProduct();
+})
+</script>
 {% endblock content %}
